@@ -2,7 +2,7 @@
   "mcpServers": {
     "hackpack": {
       "type": "http",
-      "url": "${user_config.hackpack_url}/mcp"
+      "url": "https://hackpack.fly.dev/mcp"
     }
   }
 }
