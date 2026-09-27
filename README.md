@@ -32,7 +32,7 @@ Change them with `/plugin configure hackpack@hackpack`, or at install with `--co
 Every notice starts with `[HackPack · <mode>]`, so you can see why Claude woke up.
 
 ## Things to know
-- Autowake runs only in interactive Claude Code sessions, not with `claude -p`. It needs a Claude Code version with plugin monitors: if no `[HackPack]` notices ever arrive, update Claude Code.
+- Autowake runs only in interactive Claude Code sessions in a terminal: not with `claude -p`, and not in the Claude desktop app's Code tab, which runs sessions non-interactively. It needs a Claude Code version with plugin monitors: if no `[HackPack]` notices ever arrive, update Claude Code.
 - With autowake on, Claude reads your team's new messages and knowledge changes without being asked, and they become part of your conversation with Claude. Turning the plugin off stops this from the next session. See HackPack's privacy page.
 - claude.ai and Claude Desktop have no plugins. There, add `https://hackpack.fly.dev/mcp` as a custom connector instead; it has no autowake.
 - Autowake needs `python3` on your PATH and uses only its standard library. Its limited token is kept in the plugin's data folder, readable only by you.

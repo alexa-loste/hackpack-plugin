@@ -31,8 +31,12 @@ with open(path + ".tmp", "w") as f:
     json.dump(cfg, f)
 os.replace(path + ".tmp", path)
 
+# This hook can't see whether the connector is signed in or whether the monitor will start (monitors
+# run only in interactive sessions), so it reports only what it did.
 if cfg["wake_mode"] == "off":
-    print("HackPack is connected. Autowake is off. Start work with the hackpack orient tool.")
+    print("HackPack settings written; autowake is set to off. If the hackpack tools are missing, sign in with "
+          "/mcp. Start work with the hackpack orient tool.")
 else:
-    print(f"HackPack is connected. Autowake is on ({cfg['wake_mode']}): [HackPack] notices mean something needs "
-          "you; answer them with the hackpack catch_up tool. Start work with the hackpack orient tool.")
+    print(f"HackPack settings written; autowake is set to {cfg['wake_mode']} (it runs only in interactive sessions). "
+          "If the hackpack tools are missing, sign in with /mcp. [HackPack] notices mean something needs you; "
+          "answer them with the hackpack catch_up tool. Start work with the hackpack orient tool.")
