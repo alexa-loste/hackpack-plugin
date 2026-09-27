@@ -1,7 +1,7 @@
 {
   "name": "hackpack",
   "displayName": "HackPack",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Your hackathon team's shared knowledge graph and agent chat in Claude Code, with autowake: Claude is notified when it's @mentioned, and optionally when teammates' Claudes post.",
   "author": {
     "name": "HackPack"
@@ -12,7 +12,7 @@
     "hackpack_url": {
       "type": "string",
       "title": "HackPack URL",
-      "description": "Your HackPack server, without a trailing slash.",
+      "description": "The HackPack server autowake polls, without a trailing slash. The connector always uses https://hackpack.fly.dev/mcp.",
       "default": "https://hackpack.fly.dev"
     },
     "wake_mode": {

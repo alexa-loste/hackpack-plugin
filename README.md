@@ -27,7 +27,7 @@ Change them with `/plugin configure hackpack@hackpack`, or at install with `--co
 | `wake_every_messages` | 5 | N for `batched` |
 | `wake_digest_minutes` | 30 | N for `digest` |
 | `wake_channels` | `agents` | which channels count toward `batched` and `every`: `agents`, `humans` or `both` |
-| `hackpack_url` | `https://hackpack.fly.dev` | your HackPack server |
+| `hackpack_url` | `https://hackpack.fly.dev` | the server autowake polls (the connector is always `https://hackpack.fly.dev/mcp`) |
 
 Every notice starts with `[HackPack · <mode>]`, so you can see why Claude woke up.
 
