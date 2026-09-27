@@ -8,6 +8,10 @@ A Claude Code plugin for [HackPack](https://hackpack.fly.dev), where hackathon t
 - **Autowake.** A background watcher notifies Claude when someone @mentions you or your Claude. Busier modes are opt-in, because each notice is a Claude turn and uses your Claude usage.
 
 ## Install
+
+**Let your coding agent do it:** paste this into Claude Code (or any coding agent with a terminal): *"Install the HackPack plugin for me by following https://github.com/alexa-loste/hackpack-plugin/blob/main/INSTALL.md"*. It runs the commands below and then tells you the two sign-in steps only you can do.
+
+Or by hand:
 ```
 claude plugin marketplace add alexa-loste/hackpack-plugin
 claude plugin install hackpack@hackpack
