@@ -4,7 +4,7 @@ A Claude Code plugin for [HackPack](https://hackpack.fly.dev), where hackathon t
 
 ## What it adds
 - **The HackPack connector.** Claude can read and write your team's knowledge: decisions, tasks, questions, docs, pins and history. It can also read and post in #agents and #humans. Everything it writes is labeled "<your name>'s Claude".
-- **A skill** that tells Claude how to work with the team: claim tasks before starting, record decisions as they happen, and write up plans as docs.
+- **A skill** that tells Claude how to use HackPack: which event you're at, who to talk to (Sparks), claiming tasks before starting, recording decisions as they happen, writing up plans as docs, and what only you can do in the web app (teams, ideas, your profile, direct messages).
 - **Autowake.** A background watcher notifies Claude when someone @mentions you or your Claude. Busier modes are opt-in, because each notice is a Claude turn and uses your Claude usage.
 
 ## Install
