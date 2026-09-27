@@ -4,7 +4,7 @@ Every wake is a Claude turn, so the default is the quietest useful mode. wake_mo
   mentions  (default) only when someone @mentions you or your Claude
   batched   mentions, plus once wake_every_messages messages from others pile up
   digest    one line every wake_digest_minutes if anything changed
-  every     each poll that brought new messages from others (noisy)
+  every     each batch of new messages from others (noisy)
   off       never; the watcher exits
 Any line resets the counters, and each names the catch_up call that shows everything since the last one.
 
@@ -31,6 +31,9 @@ import urllib.parse
 import urllib.request
 
 POLL = int(os.environ.get("HACKPACK_WAKE_POLL", "60"))
+# Long-poll: the server holds each request up to WAIT seconds and answers as soon as something arrives, so a
+# mention reaches Claude in about a second. A server that doesn't say "long_poll": true is polled every POLL.
+WAIT = max(0, min(25, int(os.environ.get("HACKPACK_WAKE_WAIT", "25"))))
 DATA = sys.argv[1] if len(sys.argv) > 1 else os.path.expanduser("~/.hackhub")
 TOKEN_FILE = os.path.join(DATA, "wake_token")
 MAX_CODE_LINES = 3  # each sign-in line wakes Claude, so stop asking after three unanswered codes
@@ -66,14 +69,15 @@ class Unauthorized(Exception):
     pass
 
 
-def http(cfg: dict, method: str, path: str, token: str = "", body: dict | None = None, **params):
+def http(cfg: dict, method: str, path: str, token: str = "", body: dict | None = None, timeout: float = 20,
+         **params):
     q = urllib.parse.urlencode({k: v for k, v in params.items() if v is not None})
     req = urllib.request.Request(f"{cfg['url']}{path}" + (f"?{q}" if q else ""), method=method,
                                  data=json.dumps(body).encode() if body is not None else None,
                                  headers={"Content-Type": "application/json",
                                           **({"Authorization": f"Bearer {token}"} if token else {})})
     try:
-        with urllib.request.urlopen(req, timeout=20) as r:
+        with urllib.request.urlopen(req, timeout=timeout) as r:
             return r.status, json.load(r)
     except urllib.error.HTTPError as e:
         if e.code == 401:
@@ -141,6 +145,7 @@ def main() -> None:
     token = read_token() or sign_in(cfg)
     mode = cfg["mode"]
 
+    held = False  # did the server hold the last request (long-poll)?
     cur = mark = last_line = None  # cur: poll cursor; mark: message id at the last line; last_line: its time
     pending, pend_mentions, failures, warned = 0, 0, 0, False
     while True:
@@ -148,11 +153,14 @@ def main() -> None:
             if cur is None:
                 cur = http(cfg, "GET", "/api/me/wake", token)[1]["cursor"]
                 mark, last_line = cur["after"], time.time()
+                held = bool(WAIT)  # go straight to the first held request; a server without long-poll answers at once
             else:
-                status, w = http(cfg, "GET", "/api/me/wake", token, after=cur["after"], since=last_line)
+                status, w = http(cfg, "GET", "/api/me/wake", token, timeout=WAIT + 20, after=cur["after"],
+                                 since=last_line, wait=WAIT or None)
                 if status != 200 or not w:
                     raise OSError(f"HTTP {status}")
                 cur, failures, warned = w["cursor"], 0, False
+                held = bool(WAIT and w.get("long_poll"))
                 new_msgs = sum(g["count"] for g in w["messages"] if g["channel"] in cfg["channels"])
                 pending += new_msgs
                 pend_mentions += len(w["mentions"])
@@ -191,7 +199,7 @@ def main() -> None:
                 warned = True
             time.sleep(min(300, POLL * failures))
             continue
-        time.sleep(POLL)
+        time.sleep(1 if held else POLL)  # after a held request, ask again at once (1s guards a busy loop)
 
 
 if __name__ == "__main__":
