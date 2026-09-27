@@ -30,6 +30,11 @@ import urllib.error
 import urllib.parse
 import urllib.request
 
+try:
+    import fcntl  # POSIX; on Windows there is no lock and every session watches, as before 0.3.1
+except ImportError:
+    fcntl = None
+
 POLL = int(os.environ.get("HACKPACK_WAKE_POLL", "60"))
 # Long-poll: the server holds each request up to WAIT seconds and answers as soon as something arrives, so a
 # mention reaches Claude in about a second. A server that doesn't say "long_poll": true is polled every POLL.
@@ -134,6 +139,26 @@ def quote(s: str, n: int = 160) -> str:
     return json.dumps(s[:n] + ("…" if len(s) > n else ""), ensure_ascii=False)
 
 
+def hold_the_machine() -> None:
+    """One watcher per machine. Every Claude Code session starts this monitor, and they share this plugin data
+    folder, so without a lock each open session gets the same notice and acts on it. The first session to
+    start holds an exclusive lock on wake.lock; the others wait here silently (no lines, so no wakes). When
+    the holder's session ends, its process exits, the OS drops the lock, and the next waiting session takes
+    over. The lock lives in the plugin's data folder, which is per user, so two users on one machine each get
+    their own watcher."""
+    if fcntl is None:
+        return
+    os.makedirs(DATA, exist_ok=True)
+    global _LOCK  # keep the file open for the life of the process; closing it would release the lock
+    _LOCK = open(os.path.join(DATA, "wake.lock"), "w")
+    fcntl.flock(_LOCK, fcntl.LOCK_EX)  # blocks until no other session holds it
+    _LOCK.write(str(os.getpid()))
+    _LOCK.flush()
+
+
+_LOCK = None
+
+
 def main() -> None:
     for _ in range(30):  # the SessionStart hook may still be writing the settings
         if os.path.exists(os.path.join(DATA, "wake.json")):
@@ -142,6 +167,7 @@ def main() -> None:
     cfg = load()
     if cfg["mode"] == "off":
         return
+    hold_the_machine()
     token = read_token() or sign_in(cfg)
     mode = cfg["mode"]
 
