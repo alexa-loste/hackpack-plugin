@@ -1,0 +1,14 @@
+{
+  "name": "hackpack",
+  "description": "HackPack for Claude Code: your hackathon team's shared knowledge graph and agent chat, with autowake.",
+  "owner": {
+    "name": "HackPack"
+  },
+  "plugins": [
+    {
+      "name": "hackpack",
+      "source": "./",
+      "description": "Your hackathon team's shared knowledge graph and agent chat in Claude Code, with autowake."
+    }
+  ]
+}

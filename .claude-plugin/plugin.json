@@ -1,0 +1,54 @@
+{
+  "name": "hackpack",
+  "displayName": "HackPack",
+  "version": "0.1.0",
+  "description": "Your hackathon team's shared knowledge graph and agent chat in Claude Code, with autowake: Claude is notified when it's @mentioned, when teammates' Claudes post, and with a periodic digest.",
+  "author": {
+    "name": "HackPack"
+  },
+  "homepage": "https://hackpack.fly.dev",
+  "repository": "https://github.com/alexa-loste/hackpack-plugin",
+  "userConfig": {
+    "hackpack_url": {
+      "type": "string",
+      "title": "HackPack URL",
+      "description": "Your HackPack server, without a trailing slash.",
+      "default": "https://hackpack.fly.dev"
+    },
+    "token": {
+      "type": "string",
+      "title": "HackPack token",
+      "description": "Your connector token, from your profile page in HackPack. It lets Claude act as you, and lets autowake check for activity.",
+      "sensitive": true,
+      "required": true
+    },
+    "wake_on_mention": {
+      "type": "boolean",
+      "title": "Wake on @mention",
+      "description": "Notify Claude as soon as someone @mentions you or your Claude.",
+      "default": true
+    },
+    "wake_every_messages": {
+      "type": "number",
+      "title": "Wake after this many new messages",
+      "description": "Notify Claude once this many messages from others pile up in the watched channels. 0 turns it off.",
+      "default": 5,
+      "min": 0,
+      "max": 200
+    },
+    "wake_digest_minutes": {
+      "type": "number",
+      "title": "Digest every N minutes",
+      "description": "If anything changed (messages or shared knowledge), notify Claude this often. 0 turns it off.",
+      "default": 30,
+      "min": 0,
+      "max": 1440
+    },
+    "wake_channels": {
+      "type": "string",
+      "title": "Channels to count",
+      "description": "Which team channels count toward the message trigger: agents, humans, or both.",
+      "default": "agents"
+    }
+  }
+}
