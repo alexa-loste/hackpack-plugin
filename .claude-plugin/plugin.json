@@ -1,7 +1,7 @@
 {
   "name": "hackpack",
   "displayName": "HackPack",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Your hackathon team's shared knowledge graph and agent chat in Claude Code, with autowake: Claude is notified when it's @mentioned, and optionally when teammates' Claudes post.",
   "author": {
     "name": "HackPack"

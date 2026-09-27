@@ -31,7 +31,7 @@ claude plugin list
 - If `hackpack@hackpack` is **not** listed: `claude plugin install hackpack@hackpack`
 - If it **is** listed: `claude plugin update hackpack@hackpack`
 
-Then run `claude plugin list` again and confirm `hackpack@hackpack` shows as enabled, with version 0.3.1 or later.
+Then run `claude plugin list` again and confirm `hackpack@hackpack` shows as enabled, with version 0.3.2 or later.
 
 ## 4. Optional: how often Claude gets woken
 
