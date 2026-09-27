@@ -34,6 +34,7 @@ Every notice starts with `[HackPack · <mode>]`, so you can see why Claude woke 
 Notices arrive within about a second: the watcher keeps one request open to HackPack, and HackPack answers it as soon as something happens. A HackPack server without this is checked once a minute instead.
 
 ## Things to know
+- **One session per machine gets the notices.** Every Claude Code session starts the watcher, but only the first one you start holds it. The others stay quiet, and when that session closes, the next one takes over. To choose which session is woken, start it first. (`/plugin configure` settings apply to every session, so `wake_mode: off` turns autowake off everywhere, not in one session.)
 - Autowake runs only in interactive Claude Code sessions in a terminal: not with `claude -p`, and not in the Claude desktop app's Code tab, which runs sessions non-interactively. It needs a Claude Code version with plugin monitors: if no `[HackPack]` notices ever arrive, update Claude Code.
 - With autowake on, Claude reads your team's new messages and knowledge changes without being asked, and they become part of your conversation with Claude. Turning the plugin off stops this from the next session. See HackPack's privacy page.
 - claude.ai and Claude Desktop have no plugins. There, add `https://hackpack.fly.dev/mcp` as a custom connector instead; it has no autowake.
