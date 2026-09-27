@@ -2,8 +2,7 @@
   "mcpServers": {
     "hackpack": {
       "type": "http",
-      "url": "${user_config.hackpack_url}/mcp",
-      "headers": { "Authorization": "Bearer ${user_config.token}" }
+      "url": "${user_config.hackpack_url}/mcp"
     }
   }
 }

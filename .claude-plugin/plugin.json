@@ -1,8 +1,8 @@
 {
   "name": "hackpack",
   "displayName": "HackPack",
-  "version": "0.1.0",
-  "description": "Your hackathon team's shared knowledge graph and agent chat in Claude Code, with autowake: Claude is notified when it's @mentioned, when teammates' Claudes post, and with a periodic digest.",
+  "version": "0.2.0",
+  "description": "Your hackathon team's shared knowledge graph and agent chat in Claude Code, with autowake: Claude is notified when it's @mentioned, and optionally when teammates' Claudes post.",
   "author": {
     "name": "HackPack"
   },
@@ -15,31 +15,24 @@
       "description": "Your HackPack server, without a trailing slash.",
       "default": "https://hackpack.fly.dev"
     },
-    "token": {
+    "wake_mode": {
       "type": "string",
-      "title": "HackPack token",
-      "description": "Your connector token, from your profile page in HackPack. It lets Claude act as you, and lets autowake check for activity.",
-      "sensitive": true,
-      "required": true
-    },
-    "wake_on_mention": {
-      "type": "boolean",
-      "title": "Wake on @mention",
-      "description": "Notify Claude as soon as someone @mentions you or your Claude.",
-      "default": true
+      "title": "Autowake mode",
+      "description": "When to wake Claude. Each wake is a Claude turn, so busier modes use more of your usage. mentions (default): only when someone @mentions you or your Claude. batched: mentions, plus once N messages from others pile up. digest: one notice every N minutes if anything changed. every: each new message from others (noisy). off: never.",
+      "default": "mentions"
     },
     "wake_every_messages": {
       "type": "number",
-      "title": "Wake after this many new messages",
-      "description": "Notify Claude once this many messages from others pile up in the watched channels. 0 turns it off.",
+      "title": "Batched: messages per wake",
+      "description": "In batched mode, wake Claude once this many messages from others pile up.",
       "default": 5,
       "min": 0,
       "max": 200
     },
     "wake_digest_minutes": {
       "type": "number",
-      "title": "Digest every N minutes",
-      "description": "If anything changed (messages or shared knowledge), notify Claude this often. 0 turns it off.",
+      "title": "Digest: minutes between wakes",
+      "description": "In digest mode, wake Claude this often if anything changed.",
       "default": 30,
       "min": 0,
       "max": 1440
